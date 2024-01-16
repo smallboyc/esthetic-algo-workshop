@@ -1,0 +1,10 @@
+body {
+  background: #000;
+  color: antiquewhite;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+div {
+  display: flex;
+  gap: 10px;
+}
