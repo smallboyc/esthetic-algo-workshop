@@ -1,10 +1,7 @@
-const borderPx = 5;
+const borderPx = 6;
 const margin = 20;
-
 let isClicked = false;
 
-// if (isClicked) frameRate(3);
-// else frameRate(0);
 function setup() {
   createCanvas(400, 400);
   stroke(0);
@@ -12,15 +9,14 @@ function setup() {
   const btn = document.querySelector("button");
   btn.addEventListener("click", () => {
     isClicked = !isClicked;
-    if (isClicked) frameRate(12);
+    if (isClicked) frameRate(10);
     else frameRate(0);
   });
-
-  background(255);
   strokeWeight(borderPx);
 }
 
 function draw() {
+  background(255);
   drawRect(margin, margin, width - margin * 2, height - margin * 2, 6);
   // linkPixels();
 }
@@ -32,7 +28,9 @@ function linkPixels() {
       const colorRight = get(i + borderPx, j);
       if (
         JSON.stringify(get(i, j)) == JSON.stringify([0, 0, 0, 255]) &&
-        JSON.stringify(colorLeft) == JSON.stringify(colorRight)
+        JSON.stringify(colorLeft) == JSON.stringify(colorRight) &&
+        JSON.stringify(colorLeft) != JSON.stringify([0, 0, 0, 255]) &&
+        JSON.stringify(colorRight) != JSON.stringify([0, 0, 0, 255])
       ) {
         set(i, j, colorLeft);
         updatePixels();
@@ -66,7 +64,6 @@ function drawRect(x, y, w, h, depth) {
         "#361D2E",
         "#BFDBF7",
         "#F49F0A",
-        "white",
       ])
     );
     if (
