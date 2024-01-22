@@ -1,9 +1,23 @@
-const borderPx = 6;
-const margin = 20;
+const CANVAS_SIZE = 400;
+const CELL_COUNT = 40;
+const CELL_SIZE = CANVAS_SIZE / CELL_COUNT;
+const BORDER = CELL_SIZE / 2;
+const MARGIN = 5;
+
+const COLORS = [
+  "#668F80",
+  "#BDE4A7",
+  "#5941A9",
+  "#C33149",
+  "#E63B2E",
+  "#361D2E",
+  "#BFDBF7",
+  "#F49F0A",
+];
 let isClicked = false;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
   stroke(0);
   frameRate(0);
   const btn = document.querySelector("button");
@@ -12,66 +26,47 @@ function setup() {
     if (isClicked) frameRate(10);
     else frameRate(0);
   });
-  strokeWeight(borderPx);
+  strokeWeight(BORDER);
 }
 
 function draw() {
-  background(255);
-  drawRect(margin, margin, width - margin * 2, height - margin * 2, 6);
-  // linkPixels();
-}
-
-function linkPixels() {
-  for (let i = margin; i < width - margin * 2; i++) {
-    for (let j = margin; j < height - margin * 2; j++) {
-      const colorLeft = get(i - borderPx, j);
-      const colorRight = get(i + borderPx, j);
-      if (
-        JSON.stringify(get(i, j)) == JSON.stringify([0, 0, 0, 255]) &&
-        JSON.stringify(colorLeft) == JSON.stringify(colorRight) &&
-        JSON.stringify(colorLeft) != JSON.stringify([0, 0, 0, 255]) &&
-        JSON.stringify(colorRight) != JSON.stringify([0, 0, 0, 255])
-      ) {
-        set(i, j, colorLeft);
-        updatePixels();
-      }
-    }
-  }
+  background(235, 229, 211);
+  const shapes = 5;
+  for (let i = 0; i < shapes; i++) drawRect(0, 0, CELL_COUNT, CELL_COUNT, 6);
 }
 
 function drawRect(x, y, w, h, depth) {
+  if (depth < 0) return;
+
+  if (w < 1 || h < 1) {
+    return;
+  }
+
   if (depth > 0) {
-    let ratio = random(0.3, 0.8);
     if (depth % 2 == 0) {
+      let sub_size = int(random(1, w - 1));
       //Rectangle gauche
-      drawRect(x, y, ratio * w, h, depth - 1);
+      drawRect(x, y, sub_size, h, depth - 1);
       //Rectangle droit
-      drawRect(x + ratio * w, y, (1 - ratio) * w, h, depth - 1);
+      drawRect(x + sub_size, y, w - sub_size, h, depth - 1);
     } else {
-      //Rectangle gauche
-      drawRect(x, y, w, ratio * h, depth - 1);
-      //Rectangle droit
-      drawRect(x, y + ratio * h, w, (1 - ratio) * h, depth - 1);
+      let sub_size = int(random(1, h - 1));
+      //Rectangle haut
+      drawRect(x, y, w, sub_size, depth - 1);
+      //Rectangle bas
+      drawRect(x, y + sub_size, w, h - sub_size, depth - 1);
     }
   } else {
-    fill(
-      random([
-        "#668F80",
-        "#BDE4A7",
-        "#5941A9",
-        "#C33149",
-        "#E63B2E",
-        "#361D2E",
-        "#BFDBF7",
-        "#F49F0A",
-      ])
-    );
     if (
-      x > margin &&
-      y > margin &&
-      x + w + 1 < width - margin &&
-      y + h + 1 < height - margin
-    )
-      rect(x, y, w, h);
+      x  > MARGIN &&
+      y > MARGIN &&
+      x + w < CELL_COUNT - MARGIN &&
+      y + h < CELL_COUNT - MARGIN
+    ) {
+      if (random(1) < 0.6) {
+        fill(random(COLORS));
+        rect(x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE);
+      }
+    }
   }
 }
