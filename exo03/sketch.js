@@ -17,20 +17,27 @@ const COLORS = [
 let isClicked = false;
 
 function setup() {
-  createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+  const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+  canvas.position(windowWidth / 2 - CANVAS_SIZE / 2, CANVAS_SIZE / 2);
   stroke(0);
+  const density = document.getElementById("density");
   frameRate(0);
-  const btn = document.querySelector("button");
+  const btn = document.querySelector("#toggle");
+  const save = document.querySelector("#save");
   btn.addEventListener("click", () => {
     isClicked = !isClicked;
-    if (isClicked) frameRate(10);
+    if (isClicked) frameRate(4);
     else frameRate(0);
+  });
+  save.addEventListener("click", () => {
+    saveGif("mySketch", 5);
   });
   strokeWeight(BORDER);
 }
 
 function draw() {
   background(235, 229, 211);
+
   const shapes = 5;
   for (let i = 0; i < shapes; i++) drawRect(0, 0, CELL_COUNT, CELL_COUNT, 6);
 }
@@ -58,12 +65,12 @@ function drawRect(x, y, w, h, depth) {
     }
   } else {
     if (
-      x  > MARGIN &&
+      x > MARGIN &&
       y > MARGIN &&
       x + w < CELL_COUNT - MARGIN &&
       y + h < CELL_COUNT - MARGIN
     ) {
-      if (random(1) < 0.6) {
+      if (random(1) < density.value) {
         fill(random(COLORS));
         rect(x * CELL_SIZE, y * CELL_SIZE, w * CELL_SIZE, h * CELL_SIZE);
       }
